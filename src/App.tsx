@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import Header from "./components/header";
-import EditUsersPage from "./pages/EditUsersPage";
 import UsersPage from "./pages/usersPage";
+import EditUsersPage from "./pages/editUsersPage";
 
 export default function App() {
   return (

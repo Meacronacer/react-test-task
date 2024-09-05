@@ -17,7 +17,10 @@ const selectorVariants = cva(
 
 
 interface ButtonProps extends React.HtmlHTMLAttributes<HTMLSelectElement>,
-VariantProps<typeof selectorVariants> {}
+VariantProps<typeof selectorVariants> {
+    value?: string
+    onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void
+}
 
 const Select: React.FC<ButtonProps> = ({className, variant, ...props}) => {
     return <select className={cn(selectorVariants({variant, className}))} {...props} />

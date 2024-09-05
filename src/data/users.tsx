@@ -1,6 +1,6 @@
 
 
-export const UsersData = [
+export const users = [
     {
       "name": "John Doe",
       "status": {

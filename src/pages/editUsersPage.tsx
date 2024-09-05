@@ -13,31 +13,57 @@ interface option {
   value: string;
 }
 
-export const Styles: StylesConfig<option, false, GroupBase<option>> = {
-  control: (styles) => ({
+type isMulti = false | true
+
+export const Styles: StylesConfig<option, isMulti, GroupBase<option>> = {
+  control: (styles, state) => ({
     ...styles,
     backgroundColor: "white",
     borderColor: "#e3e8ee",
+    color: state.isDisabled ? '#c2c2c2' : '#000',
+    opacity: state.isDisabled ? '50%' : '',
     '&:hover': { borderColor: 'gray' },
     boxShadow: "none",
-    height: "48px",
-    paddingLeft: "13px",
-    paddingRight: "9px",
+    height:  "48px",
+    paddingLeft:  "13px",
+    paddingRight: state.isMulti ? '0px': "9px",
     borderRadius: "0",
     fontSize: "14px",
     fontFamily: "Rubik",
     letterSpacing: "0.01em",
+  }),
+  menuList: (base) => ({
+    ...base,
+   "::-webkit-scrollbar": {
+     width: "4px"
+   },
+   "::-webkit-scrollbar-track": {
+     background: "#fff",
+   },
+   "::-webkit-scrollbar-thumb": {
+     background: "#000",
+     borderRadius: '8px'
+   },
+   "::-webkit-scrollbar-thumb:hover": {
+     background: "#555"
+   }
   }),
   dropdownIndicator: (base, state) => ({
     ...base,
     transition: "all .2s ease",
     transform: state.selectProps.menuIsOpen ? "rotate(180deg)" : ''
   }),
-  option: (styles) => ({
+  option: (styles, state) => ({
     ...styles,
-    paddingLeft: "22px",
+    paddingLeft:"22px",
     fontSize: "14px",
     fontFamily: "Rubik",
+    display: state.isMulti ? 'flex' : '',
+    columnGap: '12px',
+    color: '#5e626b',
+    background: '#fff',
+    '&:hover': {background: '#eae6e6'},
+    '&:active': {background: '#eae6e6'}
   }),
 };
 
@@ -120,7 +146,7 @@ const EditUsersPage: React.FC = () => {
             <Select
               value={department}
               styles={Styles}
-              onChange={(e) => {
+              onChange={(e:any) => {
                 if (e) {
                   setDepartamnet(e);
                   setChangeHasDone(true)
@@ -142,14 +168,12 @@ const EditUsersPage: React.FC = () => {
             <Select
               value={coutry}
               styles={Styles}
-              onChange={(e) => {
-                if (e) {
+              onChange={(e:any) => {
                   setCountry(e);
                   setChangeHasDone(true)
                   let temp = countries[0];
                   countries[0] = countries[e.index];
                   countries[e.index] = temp;
-                }
               }}
               options={countrysData}
               components={{
@@ -164,14 +188,12 @@ const EditUsersPage: React.FC = () => {
             <Select
               value={status}
               styles={Styles}
-              onChange={(e) => {
-                if (e) {
-                  setStatus(e);
+              onChange={(e:any) => {
+                  setStatus(e)
                   setChangeHasDone(true)
                   let temp = statuses[0];
                   statuses[0] = statuses[e.index];
                   statuses[e.index] = temp;
-                }
               }}
               options={statusesData}
               components={{

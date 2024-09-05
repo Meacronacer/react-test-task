@@ -1,9 +1,56 @@
-import Select from "react-select";
+import { default as Select, components} from "react-select";
 import trash from "../assets/remove.svg";
+import { departments } from "../data/departments";
 import { Button } from "../components/button";
 import { Styles } from "./editUsersPage";
+import { useState } from "react";
+import { countries } from "../data/countries";
+import { statuses } from "../data/statuses";
+import { users } from "../data/users";
+
+const Option = (props:any) => {
+    return (
+      <div>
+        <components.Option {...props}>
+          <input
+            type="checkbox"
+            className="h-[24px] w-[24px] accent-[#000]"
+            checked={props.isSelected}
+            onChange={() => null}
+          />{" "}
+          <label>{props.label}</label>
+        </components.Option>
+      </div>
+    );
+  };
 
 const UsersPage: React.FC = () => {
+    const [departmentsSelected, setDepartamnetSelected] = useState({ optionSelected: null });
+    const [countriesSelected, setCountriesSelected] = useState({ optionSelected: null })
+    const [statusesSelected, setStatusSelected] = useState({ optionSelected: null })
+    const departmentsData = departments.map((item, index) => ({index, label: item.name, value: item.name}))
+    const countriesData = countries.map((item, index) => ({index, label: item.name, value: item.name}))
+    const statusesData = statuses.map((item, index) => ({index, label: item.name, value: item.name}))
+    let departmentLen = Object(departmentsSelected.optionSelected).length
+    let countriesLen = Object(countriesSelected.optionSelected).length
+    let statusesLen = Object(statusesSelected.optionSelected).length
+
+    const userData = users.map((item, index) => (
+        <tr key={index} className="h-[80px] font-[Rubik] px-[34px] border-separate">
+            <td className="tracking-[0.01em]">{item.name}</td>
+            <td className="font-[300] leading-[143%] font-[Rubik] text-[#5e626b]">{item.department.name}</td>
+            <td className="font-[300] leading-[143%] font-[Rubik] text-[#5e626b]">{item.country.name}</td>
+            <td className="font-[300] leading-[143%] font-[Rubik] text-[#5e626b]">{item.status.name}</td>
+            <td className="float-right h-full"><img className="pf-[20px] pt-[27px] cursor-pointer hover:scale-105 transition-transform" src={trash} alt="trash" /></td>
+        </tr>
+    ))
+
+    const handleReset = () => {
+      setDepartamnetSelected({ optionSelected: null});
+      setCountriesSelected({ optionSelected: null})
+      setStatusSelected({ optionSelected: null})
+    };
+
   return (
     <div className="border-[1px] border-black w-[1240px] h-[768px] mx-auto my-[80px] p-[80px] pt-[60px]">
       <h1 className="text-[24px] text-center ml-1 tracking-[0.25em] leading-[133%] font-medium font-[Karla]">
@@ -20,27 +67,56 @@ const UsersPage: React.FC = () => {
             <Select
               className="w-[220px]"
               styles={Styles}
+              options={departmentsData}
+              closeMenuOnSelect={false}
+              hideSelectedOptions={false}
+              controlShouldRenderValue={false}
+              value={departmentsSelected.optionSelected}
+              onChange={(selected:any) => setDepartamnetSelected({optionSelected: selected})}
+              placeholder={`Departaments ${departmentLen > 0 ? departmentLen : ''}`}
+              isMulti
               components={{
                 IndicatorSeparator: () => null,
+                Option
               }}
             />
             <Select
               className="w-[220px]"
               styles={Styles}
+              isMulti
+              options={countriesData}
+              value={countriesSelected.optionSelected}
+              onChange={(selected:any) => setCountriesSelected({optionSelected: selected})}
+              closeMenuOnSelect={false}
+              hideSelectedOptions={false}
+              controlShouldRenderValue={false}
+              placeholder={`Countries ${countriesLen > 0 ? countriesLen : ''}`}
+              isDisabled={departmentLen === undefined || departmentLen <= 2}
               components={{
                 IndicatorSeparator: () => null,
+                Option
               }}
             />
             <Select
               className="w-[220px]"
               styles={Styles}
+              options={statusesData}
+              closeMenuOnSelect={false}
+              hideSelectedOptions={false}
+              controlShouldRenderValue={false}
+              value={statusesSelected.optionSelected}
+              onChange={(selected:any) => setStatusSelected({optionSelected: selected})}
+              placeholder={`Statuses ${statusesLen > 0 ? statusesLen : ''}`}
+              isDisabled={departmentLen === undefined || departmentLen <= 2}
+              isMulti
               components={{
                 IndicatorSeparator: () => null,
+                Option
               }}
             />
           </div>
 
-          <div className="p-3 border-[1px] border-[#c4c4c4] ml-5 hover:border-gray-600 group cursor-pointer">
+          <div onClick={handleReset} className="p-3 border-[1px] border-[#c4c4c4] ml-5 hover:border-gray-600 group cursor-pointer">
             <img
               className="group-hover:scale-105 transition-transform"
               src={trash}
@@ -48,10 +124,10 @@ const UsersPage: React.FC = () => {
             />
           </div>
 
-          <Button className="ml-auto">Add User</Button>
+          <Button className="ml-auto font-[Rubik] hover:bg-gray-300 transition-colors">Add User</Button>
         </div>
 
-        <div className="relative border-[1px] mt-10 px-[34px]">
+        <div className="relative border-[1px] mt-10 pl-[34px] pr-[24px] max-h-[476px] overflow-y-auto scrollbar-thin scrollbar-webkit">
             <hr className="absolute w-full h-[1px] bg-[##5e626] left-0 top-[74px]" />
         <table className="w-full text-left border-separate-2 border-collapse text-[14px]">
           <thead className="h-[74px] font-bold font-[Karla] leading-[143%] tracking-[0.03em]">
@@ -64,41 +140,7 @@ const UsersPage: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            <tr className="h-[80px] font-[Rubik] px-[34px] border-separate">
-              <td className="tracking-[0.01em]">Andrey Olishchuck</td>
-              <td className="font-[300] leading-[143%] font-[Rubik] text-[#5e626b]">Digital marketing</td>
-              <td className="font-[300] leading-[143%] font-[Rubik] text-[#5e626b]">Ukraine</td>
-              <td className="font-[300] leading-[143%] font-[Rubik] text-[#5e626b]">Active</td>
-              <td className="float-right h-full"><img className="pt-[27px] cursor-pointer hover:scale-105 transition-transform" src={trash} alt="trash" /></td>
-            </tr>
-            <tr className="h-[80px]  font-[Rubik]">
-              <td className="tracking-[0.01em]">Andrey Olishchuck</td>
-              <td className="font-[300] leading-[143%] font-[Rubik] text-[#5e626b]">Digital marketing</td>
-              <td className="font-[300] leading-[143%] font-[Rubik] text-[#5e626b]">Ukraine</td>
-              <td className="font-[300] leading-[143%] font-[Rubik] text-[#5e626b]">Active</td>
-              <td className="float-right h-full"><img className="pt-[27px] cursor-pointer hover:scale-105 transition-transform" src={trash} alt="trash" /></td>
-            </tr>
-            <tr className="h-[80px]  font-[Rubik]">
-              <td className="tracking-[0.01em]">Andrey Olishchuck</td>
-              <td className="font-[300] leading-[143%] font-[Rubik] text-[#5e626b]">Digital marketing</td>
-              <td className="font-[300] leading-[143%] font-[Rubik] text-[#5e626b]">Ukraine</td>
-              <td className="font-[300] leading-[143%] font-[Rubik] text-[#5e626b]">Active</td>
-              <td className="float-right h-full"><img className="pt-[27px] cursor-pointer hover:scale-105 transition-transform" src={trash} alt="trash" /></td>
-            </tr>
-            <tr className="h-[80px]  font-[Rubik]">
-              <td className="tracking-[0.01em]">Andrey Olishchuck</td>
-              <td className="font-[300] leading-[143%] font-[Rubik] text-[#5e626b]">Digital marketing</td>
-              <td className="font-[300] leading-[143%] font-[Rubik] text-[#5e626b]">Ukraine</td>
-              <td className="font-[300] leading-[143%] font-[Rubik] text-[#5e626b]">Active</td>
-              <td className="float-right h-full"><img className="pt-[27px] cursor-pointer hover:scale-105 transition-transform" src={trash} alt="trash" /></td>
-            </tr>
-            <tr className="h-[80px]  font-[Rubik]">
-              <td className="tracking-[0.01em]">Andrey Olishchuck</td>
-              <td className="font-[300] leading-[143%] font-[Rubik] text-[#5e626b]">Digital marketing</td>
-              <td className="font-[300] leading-[143%] font-[Rubik] text-[#5e626b]">Ukraine</td>
-              <td className="font-[300] leading-[143%] font-[Rubik] text-[#5e626b]">Active</td>
-              <td className="float-right h-full"><img className="pt-[27px] cursor-pointer hover:scale-105 transition-transform" src={trash} alt="trash" /></td>
-            </tr>
+            {userData}
           </tbody>
         </table>
         </div>

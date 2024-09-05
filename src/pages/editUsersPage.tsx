@@ -5,7 +5,7 @@ import { statuses } from "../data/statuses";
 import { countries } from "../data/countries";
 import { Input } from "../components/input";
 import { Button } from "../components/button";
-import Select, { StylesConfig } from "react-select";
+import Select, { GroupBase, StylesConfig } from "react-select";
 
 interface option {
   index: number;
@@ -13,11 +13,13 @@ interface option {
   value: string;
 }
 
-const colourStyles: StylesConfig<option, false> = {
+export const Styles: StylesConfig<option, false, GroupBase<option>> = {
   control: (styles) => ({
     ...styles,
     backgroundColor: "white",
     borderColor: "#e3e8ee",
+    '&:hover': { borderColor: 'gray' },
+    boxShadow: "none",
     height: "48px",
     paddingLeft: "13px",
     paddingRight: "9px",
@@ -25,6 +27,11 @@ const colourStyles: StylesConfig<option, false> = {
     fontSize: "14px",
     fontFamily: "Rubik",
     letterSpacing: "0.01em",
+  }),
+  dropdownIndicator: (base, state) => ({
+    ...base,
+    transition: "all .2s ease",
+    transform: state.selectProps.menuIsOpen ? "rotate(180deg)" : ''
   }),
   option: (styles) => ({
     ...styles,
@@ -34,12 +41,12 @@ const colourStyles: StylesConfig<option, false> = {
   }),
 };
 
-const EditUsersPage = () => {
+const EditUsersPage: React.FC = () => {
   const [department, setDepartamnet] = useState<option>({ index: 0, label: users[0].department.name, value: users[0].department.name});
   const [coutry, setCountry] = useState<option>({ index: 0, label: users[0].country.name, value: users[0].country.name});
   const [status, setStatus] = useState<option>({ index: 0, label: users[0].status.name, value: users[0].status.name});
   const [name, setName] = useState<string>(users[0].name);
-  const [changeHasDone, setChangeHasDone] = useState(false)
+  const [changeHasDone, setChangeHasDone] = useState<boolean>(false)
 
   const usersData = users.map((item, index) => ({ index, label: item.name, value: item.name}));
   const departmentsData = departments.map((item, index) => ({ index, label: item.name, value: item.name}));
@@ -79,7 +86,7 @@ const EditUsersPage = () => {
           </label>
           <Select
             className="max-w-[500px]"
-            styles={colourStyles}
+            styles={Styles}
             value={usersData[0]}
             onChange={userSelectorHandler}
             options={usersData}
@@ -112,7 +119,7 @@ const EditUsersPage = () => {
             </label>
             <Select
               value={department}
-              styles={colourStyles}
+              styles={Styles}
               onChange={(e) => {
                 if (e) {
                   setDepartamnet(e);
@@ -134,7 +141,7 @@ const EditUsersPage = () => {
             </label>
             <Select
               value={coutry}
-              styles={colourStyles}
+              styles={Styles}
               onChange={(e) => {
                 if (e) {
                   setCountry(e);
@@ -156,7 +163,7 @@ const EditUsersPage = () => {
             </label>
             <Select
               value={status}
-              styles={colourStyles}
+              styles={Styles}
               onChange={(e) => {
                 if (e) {
                   setStatus(e);

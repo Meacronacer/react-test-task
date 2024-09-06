@@ -7,8 +7,8 @@ const Header = () => {
 
     return (
         <header className="border-b-2 border-black h-[88px] flex items-center justify-center gap-x-5">
-            <Button className={`${location.pathname === '/' ? 'bg-[#c4c4c4]' : ''}`} onClick={() => navigate('/')} variant='big'>Edit Users</Button>
-            <Button className={`${location.pathname === '/users' ? 'bg-[#c4c4c4]' : ''}`} onClick={() => navigate('/users')} variant='big'>Users</Button>
+            <Button className={`${location.pathname === '/react-test-task/' ? 'bg-[#c4c4c4]' : ''}`} onClick={() => navigate('/react-test-task/')} variant='big'>Edit Users</Button>
+            <Button className={`${location.pathname === '/react-test-task/users' ? 'bg-[#c4c4c4]' : ''}`} onClick={() => navigate('/react-test-task/users')} variant='big'>Users</Button>
         </header>
     );
 }

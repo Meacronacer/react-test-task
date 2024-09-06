@@ -38,14 +38,13 @@ const UsersPage: React.FC = () => {
     let countriesLen = Object(countriesSelected.optionSelected).length
     let statusesLen = Object(statusesSelected.optionSelected).length
 
-    console.log(removedUsersId)
 
     const userData = users.map((item, index) => {
 
         if (removedUsersId.includes(index)) return
 
         let selected = false
-        // 
+        /* @ts-ignore */
         departmentsSelected?.optionSelected?.map((department:option) => {
             if (department.label === item.department.name) {
                 selected = true

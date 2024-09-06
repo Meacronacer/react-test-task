@@ -2,11 +2,12 @@ import { default as Select, components} from "react-select";
 import trash from "../assets/remove.svg";
 import { departments } from "../data/departments";
 import { Button } from "../components/button";
-import { Styles } from "./editUsersPage";
+import { option, Styles } from "./editUsersPage";
 import { useState } from "react";
 import { countries } from "../data/countries";
 import { statuses } from "../data/statuses";
 import { users } from "../data/users";
+import Modal from "../components/modal";
 
 const Option = (props:any) => {
     return (
@@ -25,6 +26,8 @@ const Option = (props:any) => {
   };
 
 const UsersPage: React.FC = () => {
+    const [showModal, setShowModal] = useState<boolean>(false)
+    const [removedUsersId, setRemovedUsersId] = useState<number[]>([])
     const [departmentsSelected, setDepartamnetSelected] = useState({ optionSelected: null });
     const [countriesSelected, setCountriesSelected] = useState({ optionSelected: null })
     const [statusesSelected, setStatusSelected] = useState({ optionSelected: null })
@@ -35,21 +38,44 @@ const UsersPage: React.FC = () => {
     let countriesLen = Object(countriesSelected.optionSelected).length
     let statusesLen = Object(statusesSelected.optionSelected).length
 
-    const userData = users.map((item, index) => (
-        <tr key={index} className="h-[80px] font-[Rubik] px-[34px] border-separate">
+    console.log(removedUsersId)
+
+    const userData = users.map((item, index) => {
+
+        if (removedUsersId.includes(index)) return
+
+        let selected = false
+        // 
+        departmentsSelected?.optionSelected?.map((department:option) => {
+            if (department.label === item.department.name) {
+                selected = true
+            }
+        })
+        
+        if (departmentLen && !selected) {
+            return
+        }
+
+        return (
+            <tr key={index} className="h-[80px] font-[Rubik] px-[34px] border-separate">
             <td className="tracking-[0.01em]">{item.name}</td>
             <td className="font-[300] leading-[143%] font-[Rubik] text-[#5e626b]">{item.department.name}</td>
             <td className="font-[300] leading-[143%] font-[Rubik] text-[#5e626b]">{item.country.name}</td>
             <td className="font-[300] leading-[143%] font-[Rubik] text-[#5e626b]">{item.status.name}</td>
-            <td className="float-right h-full"><img className="pf-[20px] pt-[27px] cursor-pointer hover:scale-105 transition-transform" src={trash} alt="trash" /></td>
+            <td onClick={() => userRemoveHandler(index)} className="float-right h-full"><img className="pf-[20px] pt-[27px] cursor-pointer hover:scale-105 transition-transform" src={trash} alt="trash" /></td>
         </tr>
-    ))
+        )
+    })
 
-    const handleReset = () => {
+    const resetHandler = () => {
       setDepartamnetSelected({ optionSelected: null});
       setCountriesSelected({ optionSelected: null})
       setStatusSelected({ optionSelected: null})
     };
+
+    const userRemoveHandler = (id:number) => {
+        setRemovedUsersId([...removedUsersId, id])
+    } 
 
   return (
     <div className="border-[1px] border-black w-[1240px] h-[768px] mx-auto my-[80px] p-[80px] pt-[60px]">
@@ -116,7 +142,7 @@ const UsersPage: React.FC = () => {
             />
           </div>
 
-          <div onClick={handleReset} className="p-3 border-[1px] border-[#c4c4c4] ml-5 hover:border-gray-600 group cursor-pointer">
+          <div onClick={resetHandler} className="p-3 border-[1px] border-[#c4c4c4] ml-5 hover:border-gray-600 group cursor-pointer">
             <img
               className="group-hover:scale-105 transition-transform"
               src={trash}
@@ -124,7 +150,7 @@ const UsersPage: React.FC = () => {
             />
           </div>
 
-          <Button className="ml-auto font-[Rubik] hover:bg-gray-300 transition-colors">Add User</Button>
+          <Button onClick={() => setShowModal(true)} className="ml-auto font-[Rubik] hover:bg-gray-300 transition-colors">Add User</Button>
         </div>
 
         <div className="relative border-[1px] mt-10 pl-[34px] pr-[24px] max-h-[476px] overflow-y-auto scrollbar-thin scrollbar-webkit">
@@ -145,6 +171,7 @@ const UsersPage: React.FC = () => {
         </table>
         </div>
       </div>
+      <Modal showModal={showModal} setShowModal={setShowModal} />
     </div>
   );
 };

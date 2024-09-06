@@ -1,6 +1,6 @@
 
 
-export const users = [
+export let users = [
     {
       "name": "John Doe",
       "status": {

@@ -7,8 +7,8 @@ import { Input } from "../components/input";
 import { Button } from "../components/button";
 import Select, { GroupBase, StylesConfig } from "react-select";
 
-interface option {
-  index: number;
+export interface option {
+  index?: number;
   label: string;
   value: string;
 }

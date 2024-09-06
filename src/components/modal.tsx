@@ -6,6 +6,7 @@ import { countries } from "../data/countries";
 import { statuses } from "../data/statuses";
 import { departments } from "../data/departments";
 import { Button } from "./button";
+import { users } from "../data/users";
 
 interface props {
     showModal: boolean
@@ -15,13 +16,39 @@ interface props {
 const Modal: React.FC<props> = ({showModal, setShowModal}) => {
     const [name, setName] = useState<string>('')
     const [department, setDepartamnet] = useState('')
-    const [conurty, setCountry] = useState({})
-    const [status, setStatus] = useState({})
+    const [country, setCountry] = useState('')
+    const [status, setStatus] = useState('')
     
-    const departmentsData = departments.map((item, index) => ({label: item.name, value: item.name}))
-    const countriesData = countries.map((item, index) => ({index, label: item.name, value: item.name}))
-    const statusesData = statuses.map((item, index) => ({index, label: item.name, value: item.name}))
+    const departmentsData = departments.map((item) => ({label: item.name, value: item.name}))
+    const countriesData = countries.map((item) => ({ label: item.name, value: item.name}))
+    const statusesData = statuses.map((item) => ({label: item.name, value: item.name}))
 
+
+    const addNewUserHandler = (e: React.FormEvent) => {
+        e.preventDefault()
+        if (name && status && department && country) {
+            users.push({
+                "name": name,
+                "status": {
+                  "name": status,
+                  "value": status.toUpperCase()
+                },
+                "department": {
+                  "name": department,
+                  "value": department
+                },
+                "country": {
+                  "name": country,
+                  "value": country
+                }
+              })
+            setShowModal(false)
+            setName('')
+            setCountry('')
+            setStatus('')
+            setDepartamnet('')
+        }
+    }
     
   return (
     <div
@@ -32,7 +59,8 @@ const Modal: React.FC<props> = ({showModal, setShowModal}) => {
       `}
     >
       {/* modal */}
-      <div
+      <form
+        onSubmit={addNewUserHandler}
         onClick={(e) => e.stopPropagation()}
         className={`
           bg-white shadow transition-all h-[444px] w-[720px]
@@ -42,20 +70,27 @@ const Modal: React.FC<props> = ({showModal, setShowModal}) => {
         <h3 className="text-[24px] font-medium font-[Karla] tracking-[0.25em] leading-[133%] text-center mt-10">ADD USER</h3> 
 
         <div className="mt-[40px] grid grid-cols-2 gap-y-10 gap-x-20 px-[60px]">
-          <div className="flex flex-col gap-y-1">
+          <div className="flex flex-col gap-y-1 w-[280px]">
             <label className="leading-[143%] font-[Rubik] text-[14px]">
               Full Name
             </label>
-            <Input value={name} onChange={(e) => setName(e.target.value)} />
+            <Input required className="w-[280px]" value={name} onChange={(e) => setName(e.target.value)} />
           </div>
           <div className="flex flex-col gap-y-1">
             <label className="leading-[143%] font-[Rubik] text-[14px]">
               Department
             </label>
             <Select
+              className="w-[280px]"
               styles={Styles}
               options={departmentsData}
-              onChange={(e) => setDepartamnet(e?.label)}
+              required
+              isMulti={false}
+              onChange={(e) => {
+                if (e?.label) {
+                    setDepartamnet(e.label)
+                }
+              }}
               components={{
                 IndicatorSeparator: () => null,
               }}
@@ -66,9 +101,16 @@ const Modal: React.FC<props> = ({showModal, setShowModal}) => {
               Country
             </label>
             <Select
+              className="w-[280px]"
               styles={Styles}
               options={countriesData}
-              onChange={(e) => setCountry(e?.label)}
+              isMulti={false}
+              required
+              onChange={(e) => {
+                if (e?.label) {
+                    setCountry(e?.label)
+                }
+              }}
               components={{
                 IndicatorSeparator: () => null,
               }}
@@ -79,9 +121,16 @@ const Modal: React.FC<props> = ({showModal, setShowModal}) => {
               Status
             </label>
             <Select
+              className="w-[280px]"
               styles={Styles}
               options={statusesData}
-              onChange={(e) => setStatus(e?.label)}
+              isMulti={false}
+              required
+              onChange={(e) => {
+                if (e?.label) {
+                    setStatus(e?.label)
+                }
+              }}
               components={{
                 IndicatorSeparator: () => null,
               }}
@@ -90,10 +139,10 @@ const Modal: React.FC<props> = ({showModal, setShowModal}) => {
         </div>
 
         <div className="flex items-center float-right mt-[60px] pr-[60px] gap-x-5">
-            <Button>Cancel</Button>
-            <Button>Add</Button>
+            <Button onClick={() => setShowModal(false)} >Cancel</Button>
+            <Button type="submit">Add</Button>
         </div>
-      </div>
+      </form>
     </div>
   );
 };

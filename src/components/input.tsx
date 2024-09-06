@@ -16,7 +16,7 @@ const selectorVariants = cva(
 )
 
 
-interface ButtonProps extends React.HtmlHTMLAttributes<HTMLInputElement>,
+interface ButtonProps extends React.InputHTMLAttributes<HTMLInputElement>,
 VariantProps<typeof selectorVariants> {
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
     value: string

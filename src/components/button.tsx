@@ -19,7 +19,10 @@ const buttonsVariants = cva(
 
 
 interface ButtonProps extends React.HtmlHTMLAttributes<HTMLButtonElement>,
-VariantProps<typeof buttonsVariants> {disabled?: boolean}
+VariantProps<typeof buttonsVariants> {
+    disabled?: boolean
+    type?: 'submit'
+}
 
 const Button: React.FC<ButtonProps> = ({className, variant, ...props}) => {
     return <button className={cn(buttonsVariants({variant, className}))} {...props} />

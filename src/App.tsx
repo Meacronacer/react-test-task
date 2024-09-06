@@ -8,8 +8,8 @@ export default function App() {
     <>
     <Header />
     <Routes>
-      <Route path="/" element={<EditUsersPage />} />
-      <Route path="/users" element={<UsersPage />} />
+      <Route path="/react-test-task/" element={<EditUsersPage />} />
+      <Route path="/react-test-task/users" element={<UsersPage />} />
     </Routes>
     </>
   )
